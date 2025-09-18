@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, Code, Globe, Zap, Users, ArrowRight, CheckCircle, Star, Menu, X } from 'lucide-react';
+import {  Code, Globe, Zap, ArrowRight, CheckCircle, Star, Menu, X } from 'lucide-react';
 import styled, { createGlobalStyle, css, keyframes } from 'styled-components';
 
 // Global styles
@@ -681,10 +681,8 @@ const App: React.FC = () => {
             <FooterColumn>
               <h4>Connect</h4>
               <ul>
-                <li>hello@byteslide.com</li>
-                <li>+1 (555) 123-4567</li>
-                <li>LinkedIn</li>
-                <li>Twitter</li>
+                <li>TommyDahlin95@outlook.com</li>
+                <li>+46709544189</li>
               </ul>
             </FooterColumn>
           </FooterGrid>

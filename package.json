@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "publish": "npm run build",
+    "publish-to-live": "npm run build && git add * && git commit -m 'publishing' && git push origin live"
   },
   "dependencies": {
     "lucide-react": "^0.544.0",
