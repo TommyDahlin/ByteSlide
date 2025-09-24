@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {  Code, Globe, Zap, ArrowRight, CheckCircle, Star, Menu, X } from 'lucide-react';
+import {  Code, Globe, Zap, ArrowRight, CheckCircle, Star, Menu, X, Mail, Phone, Send } from 'lucide-react';
 import styled, { createGlobalStyle, css, keyframes } from 'styled-components';
 
 
@@ -11,17 +11,25 @@ interface Service {
   features: string[];
 }
 
-interface Testimonial {
+interface ContactForm {
   name: string;
+  email: string;
   company: string;
-  text: string;
-  rating: number;
+  message: string;
 }
 
 // Main Component
 const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [scrollY, setScrollY] = useState<number>(0);
+  const [contactForm, setContactForm] = useState<ContactForm>({
+    name: '',
+    email: '',
+    company: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitMessage, setSubmitMessage] = useState<string>('');
 
   useEffect(() => {
     const handleScroll = (): void => setScrollY(window.scrollY);
@@ -67,8 +75,51 @@ const App: React.FC = () => {
   };
 
   const handleCTAClick = (action: string): void => {
-    console.log(`CTA clicked: ${action}`);
-    // Add your CTA handling logic here
+    if (action === 'consultation' || action === 'quote') {
+      // Scroll to contact form
+      const contactSection = document.getElementById('contact');
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      console.log(`CTA clicked: ${action}`);
+    }
+  };
+
+  const handleContactFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    const { name, value } = e.target;
+    setContactForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      // Replace this URL with your actual serverless function endpoint
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactForm),
+      });
+
+      if (response.ok) {
+        setSubmitMessage('Thank you for your message! We\'ll get back to you soon.');
+        setContactForm({ name: '', email: '', company: '', message: '' });
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      setSubmitMessage('Sorry, there was an error sending your message. Please try again or contact us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -144,7 +195,7 @@ const App: React.FC = () => {
       </HeroSection>
 
       {/* Services Section */}
-      <Section bgColor="#f9fafb">
+      <Section id="services" bgColor="#f9fafb">
         <MaxWidthContainer>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <Heading2>Our Expertise</Heading2>
@@ -176,7 +227,7 @@ const App: React.FC = () => {
       </Section>
 
       {/* About Section */}
-      <Section>
+      <Section id="about">
         <MaxWidthContainer>
           <GridContainer cols={2} gap={4}>
             <div>
@@ -212,6 +263,111 @@ const App: React.FC = () => {
         </MaxWidthContainer>
       </Section>
 
+      {/* Contact Section */}
+      <Section id="contact" bgColor="#f9fafb">
+        <MaxWidthContainer>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <Heading2>Get In Touch</Heading2>
+            <Paragraph size="xl" style={{ maxWidth: '42rem', margin: '0 auto' }}>
+              Ready to start your project? Let's discuss how we can help you achieve your goals.
+            </Paragraph>
+          </div>
+
+          <GridContainer cols={2} gap={4}>
+            <div>
+              <Heading3>Let's Talk About Your Project</Heading3>
+              <Paragraph style={{ marginBottom: '2rem' }}>
+                We're here to help you transform your ideas into powerful web applications. 
+                Reach out to us and let's discuss how we can bring your vision to life.
+              </Paragraph>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Mail className="w-5 h-5 text-blue-600 mr-3" />
+                  <span>TommyDahlin95@outlook.com</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Phone className="w-5 h-5 text-blue-600 mr-3" />
+                  <span>+46709544189</span>
+                </div>
+              </div>
+            </div>
+
+            <ContactFormContainer>
+              <form onSubmit={handleContactSubmit}>
+                <FormGrid>
+                  <FormGroup>
+                    <FormLabel htmlFor="name">Name *</FormLabel>
+                    <FormInput
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={contactForm.name}
+                      onChange={handleContactFormChange}
+                      required
+                      placeholder="Your full name"
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <FormLabel htmlFor="email">Email *</FormLabel>
+                    <FormInput
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={contactForm.email}
+                      onChange={handleContactFormChange}
+                      required
+                      placeholder="your@email.com"
+                    />
+                  </FormGroup>
+                </FormGrid>
+
+                <FormGroup>
+                  <FormLabel htmlFor="company">Company</FormLabel>
+                  <FormInput
+                    type="text"
+                    id="company"
+                    name="company"
+                    value={contactForm.company}
+                    onChange={handleContactFormChange}
+                    placeholder="Your company name"
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <FormLabel htmlFor="message">Message *</FormLabel>
+                  <FormTextarea
+                    id="message"
+                    name="message"
+                    value={contactForm.message}
+                    onChange={handleContactFormChange}
+                    required
+                    rows={5}
+                    placeholder="Tell us about your project..."
+                  />
+                </FormGroup>
+
+                <StyledButton 
+                  type="submit" 
+                  variant="primary" 
+                  disabled={isSubmitting}
+                  style={{ width: '100%' }}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                  <Send className="inline-block ml-2 w-5 h-5" />
+                </StyledButton>
+
+                {submitMessage && (
+                  <SubmitMessage success={submitMessage.includes('Thank you')}>
+                    {submitMessage}
+                  </SubmitMessage>
+                )}
+              </form>
+            </ContactFormContainer>
+          </GridContainer>
+        </MaxWidthContainer>
+      </Section>
 
       {/* CTA Section */}
       <CTASection>
@@ -403,6 +559,10 @@ const GridContainer = styled.div<{ cols?: number, gap?: number }>`
   display: grid;
   ${props => props.cols && `grid-template-columns: repeat(${props.cols}, 1fr);`}
   ${props => props.gap && `gap: ${props.gap}rem;`}
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 // Navigation
@@ -417,6 +577,14 @@ const StyledNav = styled.nav<{ scrolled: boolean }>`
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   `}
 `;
+
+const SubmitMessage = styled.p<{ success?: boolean }>`
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: ${props => (props.success ? 'green' : 'red')};
+`;
+
 
 const NavContainer = styled.div`
   display: flex;
@@ -456,6 +624,9 @@ const NavLinks = styled.div`
 
 const MobileMenuButton = styled.button`
   display: block;
+  background: none;
+  border: none;
+  cursor: pointer;
 
   @media (min-width: 768px) {
     display: none;
@@ -480,6 +651,14 @@ const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' | 'outlin
   transition: all 0.3s;
   display: inline-flex;
   align-items: center;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 
   ${props => {
     switch (props.variant) {
@@ -488,7 +667,7 @@ const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' | 'outlin
           background: linear-gradient(to right, #2563eb, #9333ea);
           color: white;
           
-          &:hover {
+          &:hover:not(:disabled) {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             transform: translateY(-0.25rem);
           }
@@ -498,16 +677,17 @@ const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' | 'outlin
           background-color: white;
           color: #2563eb;
           
-          &:hover {
+          &:hover:not(:disabled) {
             background-color: #f9fafb;
           }
         `;
       case 'outline':
         return css`
           border: 2px solid #d1d5db;
+          background: transparent;
           color: #374151;
           
-          &:hover {
+          &:hover:not(:disabled) {
             border-color: #2563eb;
             color: #2563eb;
           }
@@ -524,6 +704,8 @@ const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' | 'outlin
 const NavLink = styled.a<{ mobile?: boolean }>`
   color: #374151;
   transition: color 0.3s;
+  text-decoration: none;
+  cursor: pointer;
   
   &:hover {
     color: #2563eb;
@@ -588,14 +770,6 @@ const ServiceIcon = styled.div`
   transition: transform 0.3s;
 `;
 
-// Testimonial Card
-const TestimonialCard = styled.div`
-  background-color: white;
-  padding: 2rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-`;
-
 // Stats Section
 const StatsContainer = styled.div`
   background: linear-gradient(to right, #2563eb, #9333ea);
@@ -649,3 +823,76 @@ const FooterBottom = styled.div`
   text-align: center;
   color: #9ca3af;
 `;
+
+// Contact Form Styles
+const ContactFormContainer = styled.div`
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+`;
+
+const FormGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const FormLabel = styled.label`
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+`;
+
+const FormInput = styled.input`
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+`;
+
+const FormTextarea = styled.textarea`
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 120px;
+  transition: border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+`;
+
