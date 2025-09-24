@@ -2,6 +2,294 @@ import React, { useState, useEffect } from 'react';
 import {  Code, Globe, Zap, ArrowRight, CheckCircle, Star, Menu, X } from 'lucide-react';
 import styled, { createGlobalStyle, css, keyframes } from 'styled-components';
 
+
+// Interfaces
+interface Service {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  features: string[];
+}
+
+interface Testimonial {
+  name: string;
+  company: string;
+  text: string;
+  rating: number;
+}
+
+// Main Component
+const App: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [scrollY, setScrollY] = useState<number>(0);
+
+  useEffect(() => {
+    const handleScroll = (): void => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const services: Service[] = [
+    {
+      icon: <Globe className="w-8 h-8" />,
+      title: "Single Page Applications",
+      description: "Lightning-fast SPAs built with React, Vue, and Angular that deliver exceptional user experiences and seamless navigation.",
+      features: ["React/Vue/Angular", "State Management", "Progressive Web Apps"]
+    },
+    {
+      icon: <Code className="w-8 h-8" />,
+      title: "Full-Stack Web Applications",
+      description: "End-to-end web solutions from database design to user interface, built with modern frameworks and best practices.",
+      features: ["Node.js/Java", "Database Design", "API Development"]
+    }
+  ];
+
+  const stats = [
+    { value: "5+", label: "Projects Delivered" },
+    { value: "98%", label: "Client Satisfaction" },
+    { value: "24/7", label: "Support Available" },
+    { value: "3+", label: "Years Experience" }
+  ];
+
+  const aboutFeatures: string[] = [
+    "Expert consultants with proven track records",
+    "Modern frameworks and cutting-edge technologies",
+    "Scalable solutions that grow with your business",
+    "Dedicated support and ongoing optimization"
+  ];
+
+  const handleMenuToggle = (): void => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleNavClick = (): void => {
+    setIsMenuOpen(false);
+  };
+
+  const handleCTAClick = (action: string): void => {
+    console.log(`CTA clicked: ${action}`);
+    // Add your CTA handling logic here
+  };
+
+  return (
+    <Container>
+      <GlobalStyle />
+      
+      {/* Navigation */}
+      <StyledNav scrolled={scrollY > 50}>
+        <MaxWidthContainer>
+          <NavContainer>
+            <Logo>
+              <LogoIcon />
+              <span>ByteSlide</span>
+            </Logo>
+            
+            <NavLinks>
+              <NavLink href="#services">Services</NavLink>
+              <NavLink href="#about">About</NavLink>
+              <NavLink href="#testimonials">Testimonials</NavLink>
+              <NavLink href="#contact">Contact</NavLink>
+            </NavLinks>
+
+            <MobileMenuButton onClick={handleMenuToggle} aria-label="Toggle menu">
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </MobileMenuButton>
+          </NavContainer>
+
+          {/* Mobile menu */}
+          {isMenuOpen && (
+            <MobileMenu>
+              <FlexContainer direction="col" style={{ gap: '1rem' }}>
+                <NavLink href="#services" mobile onClick={handleNavClick}>Services</NavLink>
+                <NavLink href="#about" mobile onClick={handleNavClick}>About</NavLink>
+                <NavLink href="#testimonials" mobile onClick={handleNavClick}>Testimonials</NavLink>
+                <NavLink href="#contact" mobile onClick={handleNavClick}>Contact</NavLink>
+              </FlexContainer>
+            </MobileMenu>
+          )}
+        </MaxWidthContainer>
+      </StyledNav>
+
+      {/* Hero Section */}
+      <HeroSection>
+        <MaxWidthContainer style={{ position: 'relative', paddingTop: '4rem' }}>
+          <div style={{ textAlign: 'center' }}>
+            <Heading1>
+              <GradientText>ByteSlide</GradientText>
+            </Heading1>
+            <Heading2 style={{ fontSize: '1.875rem', fontWeight: 300, marginBottom: '2rem' }}>
+              Your Solution to Complex Web Challenges
+            </Heading2>
+            <Paragraph size="xl" style={{ marginBottom: '3rem', maxWidth: '48rem', marginLeft: 'auto', marginRight: 'auto' }}>
+              We specialize in crafting cutting-edge web applications and single-page applications that drive business growth. 
+              Transform your digital presence with scalable, high-performance solutions built by expert consultants.
+            </Paragraph>
+            
+            <FlexContainer justify="center" align="center" style={{ gap: '1rem', flexDirection: 'column' }}>
+              <StyledButton variant="primary" onClick={() => handleCTAClick('get-started')}>
+                Get Started Today
+                <ArrowRight className="inline-block ml-2 w-5 h-5" />
+              </StyledButton>
+              <StyledButton variant="outline" onClick={() => handleCTAClick('view-work')}>
+                View Our Work
+              </StyledButton>
+            </FlexContainer>
+          </div>
+
+          {/* Floating elements */}
+          <FloatingCircle color="#bfdbfe" top="5rem" left="2.5rem" size="5rem" animation="bounce" />
+          <FloatingCircle color="#e9d5ff" top="10rem" right="5rem" size="4rem" animation="pulse" />
+          <FloatingCircle color="#c7d2fe" bottom="5rem" left="5rem" size="3rem" animation="bounce" />
+        </MaxWidthContainer>
+      </HeroSection>
+
+      {/* Services Section */}
+      <Section bgColor="#f9fafb">
+        <MaxWidthContainer>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <Heading2>Our Expertise</Heading2>
+            <Paragraph size="xl" style={{ maxWidth: '42rem', margin: '0 auto' }}>
+              Delivering comprehensive web solutions that exceed expectations and drive measurable results
+            </Paragraph>
+          </div>
+
+          <GridContainer cols={2} gap={3}>
+            {services.map((service: Service, index: number) => (
+              <ServiceCard key={index}>
+                <ServiceIcon>
+                  {service.icon}
+                </ServiceIcon>
+                <Heading3>{service.title}</Heading3>
+                <Paragraph style={{ marginBottom: '1.5rem' }}>{service.description}</Paragraph>
+                <ul style={{ listStyle: 'none' }}>
+                  {service.features.map((feature: string, idx: number) => (
+                    <li key={idx} style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </ServiceCard>
+            ))}
+          </GridContainer>
+        </MaxWidthContainer>
+      </Section>
+
+      {/* About Section */}
+      <Section>
+        <MaxWidthContainer>
+          <GridContainer cols={2} gap={4}>
+            <div>
+              <Heading2>Why Choose ByteSlide?</Heading2>
+              <Paragraph size="lg" style={{ marginBottom: '2rem' }}>
+                We're not just developers – we're strategic partners who understand that every line of code should serve your business objectives. 
+                With years of experience in modern web technologies, we deliver solutions that are both innovative and reliable.
+              </Paragraph>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {aboutFeatures.map((item: string, index: number) => (
+                  <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                    <CheckCircle className="w-6 h-6 text-green-500 mr-3" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <StatsContainer>
+                <GridContainer cols={2} gap={2}>
+                  {stats.map((stat, index: number) => (
+                    <div key={index} style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{stat.value}</div>
+                      <div style={{ color: '#bfdbfe' }}>{stat.label}</div>
+                    </div>
+                  ))}
+                </GridContainer>
+              </StatsContainer>
+            </div>
+          </GridContainer>
+        </MaxWidthContainer>
+      </Section>
+
+
+      {/* CTA Section */}
+      <CTASection>
+        <MaxWidthContainer>
+          <Heading2 style={{ color: 'white', marginBottom: '1.5rem' }}>
+            Ready to Transform Your Digital Presence?
+          </Heading2>
+          <Paragraph size="xl" style={{ color: '#bfdbfe', marginBottom: '2.5rem', maxWidth: '42rem', margin: '0 auto' }}>
+            Let's discuss how ByteSlide can help you build the perfect web solution for your business needs.
+          </Paragraph>
+          
+          <FlexContainer justify="center" style={{ gap: '1rem', flexDirection: 'column' }}>
+            <StyledButton variant="secondary" onClick={() => handleCTAClick('consultation')}>
+              Schedule a Consultation
+            </StyledButton>
+            <StyledButton 
+              variant="outline" 
+              style={{ borderColor: 'white', color: 'white' }}
+              onClick={() => handleCTAClick('quote')}
+            >
+              Get a Quote
+            </StyledButton>
+          </FlexContainer>
+        </MaxWidthContainer>
+      </CTASection>
+
+      {/* Footer */}
+      <Footer>
+        <MaxWidthContainer>
+          <FooterGrid>
+            <div>
+              <Logo style={{ color: 'linear-gradient(to left, #2563eb, #9333ea)' }}>
+                <span>ByteSlide</span>
+              </Logo>
+              <Paragraph style={{ color: '#9ca3af' }}>
+                Professional web consulting services for modern businesses.
+              </Paragraph>
+            </div>
+            <FooterColumn>
+              <h4>Services</h4>
+              <ul>
+                <li>Web Applications</li>
+                <li>Single Page Apps</li>
+                <li>Performance Optimization</li>
+                <li>Consulting</li>
+              </ul>
+            </FooterColumn>
+            
+            <FooterColumn>
+              <h4>Company</h4>
+              <ul>
+                <li>About Us</li>
+                <li>Our Process</li>
+                <li>Case Studies</li>
+                <li>Contact</li>
+              </ul>
+            </FooterColumn>
+            
+            <FooterColumn>
+              <h4>Connect</h4>
+              <ul>
+                <li>TommyDahlin95@outlook.com</li>
+                <li>+46709544189</li>
+              </ul>
+            </FooterColumn>
+          </FooterGrid>
+          
+          <FooterBottom>
+            <p>&copy; 2025 ByteSlide. All rights reserved.</p>
+          </FooterBottom>
+        </MaxWidthContainer>
+      </Footer>
+    </Container>
+  );
+};
+
+export default App;
+
 // Global styles
 const GlobalStyle = createGlobalStyle`
   * {
@@ -361,339 +649,3 @@ const FooterBottom = styled.div`
   text-align: center;
   color: #9ca3af;
 `;
-
-// Interfaces
-interface Service {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  features: string[];
-}
-
-interface Testimonial {
-  name: string;
-  company: string;
-  text: string;
-  rating: number;
-}
-
-// Main Component
-const App: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [scrollY, setScrollY] = useState<number>(0);
-
-  useEffect(() => {
-    const handleScroll = (): void => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const services: Service[] = [
-    {
-      icon: <Globe className="w-8 h-8" />,
-      title: "Single Page Applications",
-      description: "Lightning-fast SPAs built with React, Vue, and Angular that deliver exceptional user experiences and seamless navigation.",
-      features: ["React/Vue/Angular", "State Management", "Progressive Web Apps"]
-    },
-    {
-      icon: <Code className="w-8 h-8" />,
-      title: "Full-Stack Web Applications",
-      description: "End-to-end web solutions from database design to user interface, built with modern frameworks and best practices.",
-      features: ["Node.js/Python/Java", "Database Design", "API Development"]
-    },
-    {
-      icon: <Zap className="w-8 h-8" />,
-      title: "Performance Optimization",
-      description: "Transform slow applications into high-performance solutions that scale with your business growth.",
-      features: ["Speed Optimization", "Scalability", "SEO Enhancement"]
-    }
-  ];
-
-  const testimonials: Testimonial[] = [
-    {
-      name: "Sarah Chen",
-      company: "TechStart Solutions",
-      text: "ByteSlide transformed our outdated system into a modern, efficient platform. Our productivity increased by 40%.",
-      rating: 5
-    },
-    {
-      name: "Michael Rodriguez",
-      company: "Global Enterprises",
-      text: "The team's expertise in SPAs helped us create a seamless user experience that our customers love.",
-      rating: 5
-    }
-  ];
-
-  const stats = [
-    { value: "50+", label: "Projects Delivered" },
-    { value: "98%", label: "Client Satisfaction" },
-    { value: "24/7", label: "Support Available" },
-    { value: "5+", label: "Years Experience" }
-  ];
-
-  const aboutFeatures: string[] = [
-    "Expert consultants with proven track records",
-    "Modern frameworks and cutting-edge technologies",
-    "Scalable solutions that grow with your business",
-    "Dedicated support and ongoing optimization"
-  ];
-
-  const handleMenuToggle = (): void => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleNavClick = (): void => {
-    setIsMenuOpen(false);
-  };
-
-  const handleCTAClick = (action: string): void => {
-    console.log(`CTA clicked: ${action}`);
-    // Add your CTA handling logic here
-  };
-
-  return (
-    <Container>
-      <GlobalStyle />
-      
-      {/* Navigation */}
-      <StyledNav scrolled={scrollY > 50}>
-        <MaxWidthContainer>
-          <NavContainer>
-            <Logo>
-              <LogoIcon />
-              <span>ByteSlide</span>
-            </Logo>
-            
-            <NavLinks>
-              <NavLink href="#services">Services</NavLink>
-              <NavLink href="#about">About</NavLink>
-              <NavLink href="#testimonials">Testimonials</NavLink>
-              <NavLink href="#contact">Contact</NavLink>
-            </NavLinks>
-
-            <MobileMenuButton onClick={handleMenuToggle} aria-label="Toggle menu">
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </MobileMenuButton>
-          </NavContainer>
-
-          {/* Mobile menu */}
-          {isMenuOpen && (
-            <MobileMenu>
-              <FlexContainer direction="col" style={{ gap: '1rem' }}>
-                <NavLink href="#services" mobile onClick={handleNavClick}>Services</NavLink>
-                <NavLink href="#about" mobile onClick={handleNavClick}>About</NavLink>
-                <NavLink href="#testimonials" mobile onClick={handleNavClick}>Testimonials</NavLink>
-                <NavLink href="#contact" mobile onClick={handleNavClick}>Contact</NavLink>
-              </FlexContainer>
-            </MobileMenu>
-          )}
-        </MaxWidthContainer>
-      </StyledNav>
-
-      {/* Hero Section */}
-      <HeroSection>
-        <MaxWidthContainer style={{ position: 'relative', paddingTop: '4rem' }}>
-          <div style={{ textAlign: 'center' }}>
-            <Heading1>
-              <GradientText>ByteSlide</GradientText>
-            </Heading1>
-            <Heading2 style={{ fontSize: '1.875rem', fontWeight: 300, marginBottom: '2rem' }}>
-              Your Solution to Complex Web Challenges
-            </Heading2>
-            <Paragraph size="xl" style={{ marginBottom: '3rem', maxWidth: '48rem', marginLeft: 'auto', marginRight: 'auto' }}>
-              We specialize in crafting cutting-edge web applications and single-page applications that drive business growth. 
-              Transform your digital presence with scalable, high-performance solutions built by expert consultants.
-            </Paragraph>
-            
-            <FlexContainer justify="center" align="center" style={{ gap: '1rem', flexDirection: 'column' }}>
-              <StyledButton variant="primary" onClick={() => handleCTAClick('get-started')}>
-                Get Started Today
-                <ArrowRight className="inline-block ml-2 w-5 h-5" />
-              </StyledButton>
-              <StyledButton variant="outline" onClick={() => handleCTAClick('view-work')}>
-                View Our Work
-              </StyledButton>
-            </FlexContainer>
-          </div>
-
-          {/* Floating elements */}
-          <FloatingCircle color="#bfdbfe" top="5rem" left="2.5rem" size="5rem" animation="bounce" />
-          <FloatingCircle color="#e9d5ff" top="10rem" right="5rem" size="4rem" animation="pulse" />
-          <FloatingCircle color="#c7d2fe" bottom="5rem" left="5rem" size="3rem" animation="bounce" />
-        </MaxWidthContainer>
-      </HeroSection>
-
-      {/* Services Section */}
-      <Section bgColor="#f9fafb">
-        <MaxWidthContainer>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <Heading2>Our Expertise</Heading2>
-            <Paragraph size="xl" style={{ maxWidth: '42rem', margin: '0 auto' }}>
-              Delivering comprehensive web solutions that exceed expectations and drive measurable results
-            </Paragraph>
-          </div>
-
-          <GridContainer cols={3} gap={2}>
-            {services.map((service: Service, index: number) => (
-              <ServiceCard key={index}>
-                <ServiceIcon>
-                  {service.icon}
-                </ServiceIcon>
-                <Heading3>{service.title}</Heading3>
-                <Paragraph style={{ marginBottom: '1.5rem' }}>{service.description}</Paragraph>
-                <ul style={{ listStyle: 'none' }}>
-                  {service.features.map((feature: string, idx: number) => (
-                    <li key={idx} style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </ServiceCard>
-            ))}
-          </GridContainer>
-        </MaxWidthContainer>
-      </Section>
-
-      {/* About Section */}
-      <Section>
-        <MaxWidthContainer>
-          <GridContainer cols={2} gap={4}>
-            <div>
-              <Heading2>Why Choose ByteSlide?</Heading2>
-              <Paragraph size="lg" style={{ marginBottom: '2rem' }}>
-                We're not just developers – we're strategic partners who understand that every line of code should serve your business objectives. 
-                With years of experience in modern web technologies, we deliver solutions that are both innovative and reliable.
-              </Paragraph>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {aboutFeatures.map((item: string, index: number) => (
-                  <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                    <CheckCircle className="w-6 h-6 text-green-500 mr-3" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ position: 'relative' }}>
-              <StatsContainer>
-                <GridContainer cols={2} gap={2}>
-                  {stats.map((stat, index: number) => (
-                    <div key={index} style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{stat.value}</div>
-                      <div style={{ color: '#bfdbfe' }}>{stat.label}</div>
-                    </div>
-                  ))}
-                </GridContainer>
-              </StatsContainer>
-            </div>
-          </GridContainer>
-        </MaxWidthContainer>
-      </Section>
-
-      {/* Testimonials */}
-      <Section bgColor="#f9fafb">
-        <MaxWidthContainer>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <Heading2>What Our Clients Say</Heading2>
-            <Paragraph size="xl">Trusted by businesses of all sizes</Paragraph>
-          </div>
-
-          <GridContainer cols={2} gap={2}>
-            {testimonials.map((testimonial: Testimonial, index: number) => (
-              <TestimonialCard key={index}>
-                <div style={{ display: 'flex', marginBottom: '1rem' }}>
-                  {Array.from({ length: testimonial.rating }, (_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400" style={{ fill: 'currentColor' }} />
-                  ))}
-                </div>
-                <Paragraph style={{ marginBottom: '1.5rem', fontStyle: 'italic' }}>"{testimonial.text}"</Paragraph>
-                <div>
-                  <div style={{ fontWeight: '600' }}>{testimonial.name}</div>
-                  <div style={{ color: '#6b7280' }}>{testimonial.company}</div>
-                </div>
-              </TestimonialCard>
-            ))}
-          </GridContainer>
-        </MaxWidthContainer>
-      </Section>
-
-      {/* CTA Section */}
-      <CTASection>
-        <MaxWidthContainer>
-          <Heading2 style={{ color: 'white', marginBottom: '1.5rem' }}>
-            Ready to Transform Your Digital Presence?
-          </Heading2>
-          <Paragraph size="xl" style={{ color: '#bfdbfe', marginBottom: '2.5rem', maxWidth: '42rem', margin: '0 auto' }}>
-            Let's discuss how ByteSlide can help you build the perfect web solution for your business needs.
-          </Paragraph>
-          
-          <FlexContainer justify="center" style={{ gap: '1rem', flexDirection: 'column' }}>
-            <StyledButton variant="secondary" onClick={() => handleCTAClick('consultation')}>
-              Schedule a Consultation
-            </StyledButton>
-            <StyledButton 
-              variant="outline" 
-              style={{ borderColor: 'white', color: 'white' }}
-              onClick={() => handleCTAClick('quote')}
-            >
-              Get a Quote
-            </StyledButton>
-          </FlexContainer>
-        </MaxWidthContainer>
-      </CTASection>
-
-      {/* Footer */}
-      <Footer>
-        <MaxWidthContainer>
-          <FooterGrid>
-            <div>
-              <Logo style={{ color: 'linear-gradient(to left, #2563eb, #9333ea)' }}>
-                <LogoIcon> B </LogoIcon>
-                <span>ByteSlide</span>
-              </Logo>
-              <Paragraph style={{ color: '#9ca3af' }}>
-                Professional web consulting services for modern businesses.
-              </Paragraph>
-            </div>
-            
-            <FooterColumn>
-              <h4>Services</h4>
-              <ul>
-                <li>Web Applications</li>
-                <li>Single Page Apps</li>
-                <li>Performance Optimization</li>
-                <li>Consulting</li>
-              </ul>
-            </FooterColumn>
-            
-            <FooterColumn>
-              <h4>Company</h4>
-              <ul>
-                <li>About Us</li>
-                <li>Our Process</li>
-                <li>Case Studies</li>
-                <li>Contact</li>
-              </ul>
-            </FooterColumn>
-            
-            <FooterColumn>
-              <h4>Connect</h4>
-              <ul>
-                <li>TommyDahlin95@outlook.com</li>
-                <li>+46709544189</li>
-              </ul>
-            </FooterColumn>
-          </FooterGrid>
-          
-          <FooterBottom>
-            <p>&copy; 2025 ByteSlide. All rights reserved.</p>
-          </FooterBottom>
-        </MaxWidthContainer>
-      </Footer>
-    </Container>
-  );
-};
-
-export default App;
