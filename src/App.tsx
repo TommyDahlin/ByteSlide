@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {  Code, Globe, Zap, ArrowRight, CheckCircle, Star, Menu, X, Mail, Phone, Send } from 'lucide-react';
+import { Code, Globe, ArrowRight, CheckCircle, Menu, X, Mail, Phone, Send } from 'lucide-react';
 import styled, { createGlobalStyle, css, keyframes } from 'styled-components';
 
 
