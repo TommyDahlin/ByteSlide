@@ -22,6 +22,15 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: cp CNAME dist/CNAME || true
+      - name: Debug workspace
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          pwd
+          ls -la
+          echo 'Listing repo root:'
+          ls -la $GITHUB_WORKSPACE || true
+          echo 'Listing dist (if present):'
+          ls -la dist || ls -la ./dist || true
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
