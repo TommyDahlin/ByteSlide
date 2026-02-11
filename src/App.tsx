@@ -136,7 +136,7 @@ const App: React.FC = () => {
             </Logo>
             
             <NavLinks>
-              <NavLink href="#services">Services</NavLink>
+              <NavLink href="#services">Services buh</NavLink>
               <NavLink href="#about">About</NavLink>
               <NavLink href="#testimonials">Testimonials</NavLink>
               <NavLink href="#contact">Contact</NavLink>
