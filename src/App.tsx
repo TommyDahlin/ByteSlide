@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Code, Globe, ArrowRight, CheckCircle, Menu, X, Mail, Phone, Send } from 'lucide-react';
+import { Code, Globe, ArrowRight, CheckCircle, Menu, X, Mail, Phone, Send, Warehouse, ScanLine, Users, ShieldCheck } from 'lucide-react';
 import styled, { createGlobalStyle, css, keyframes } from 'styled-components';
-
+import logo from './assets/BSAB_NO_TEXT_LOGO.png'
 
 // Interfaces
 interface Service {
@@ -66,6 +66,85 @@ const App: React.FC = () => {
     "Dedicated support and ongoing optimization"
   ];
 
+  const featuredSolutions = [
+    {
+      eyebrow: 'Featured Solution',
+      title: 'Inventor-Y',
+      description:
+        'Inventor-Y is a modern inventory management web application built for businesses and teams that need clear control over stock, item locations, warehouse organization, QR workflows, and team-based access.',
+      details:
+        'The platform supports inventory creation, multi-location quantity tracking, fast stock transfers, responsive scanning workflows, subscription-aware collaboration, and role-based controls in a polished business-focused experience.',
+      summary:
+        'A professional inventory system focused on visibility, speed, and maintainable operations at scale.',
+      capabilities: [
+        'Create and manage inventory items with dependable state handling',
+        'Assign and move stock across rooms, shelves, rows, drawers, and slots',
+        'Use QR-enabled workflows for fast updates, audits, and fulfillment actions',
+        'Invite teammates with role-based permissions and shared billing logic'
+      ],
+      pillars: [
+        {
+          icon: <Warehouse className="w-6 h-6" />,
+          title: 'Structured storage',
+          description: 'Model warehouse-style location hierarchies with clear operational visibility.'
+        },
+        {
+          icon: <ScanLine className="w-6 h-6" />,
+          title: 'QR efficiency',
+          description: 'Enable faster day-to-day updates with scan-first inventory workflows.'
+        },
+        {
+          icon: <Users className="w-6 h-6" />,
+          title: 'Team collaboration',
+          description: 'Support invitations, shared access, and subscription-aware team management.'
+        },
+        {
+          icon: <ShieldCheck className="w-6 h-6" />,
+          title: 'Business-ready control',
+          description: 'Protect critical actions with role-based permissions and maintainable architecture.'
+        }
+      ]
+    },
+    {
+      eyebrow: 'Claims Platform',
+      title: 'Claims Manager',
+      description:
+        'Claims Manager is a modern claims management platform designed to make warranty, service, and operational claim handling faster, clearer, and more collaborative.',
+      details:
+        'Built for organizations that need better oversight and smoother workflows, Claims Manager helps teams create, assign, track, and resolve claims in one secure system with documentation, in-context communication, and full lifecycle visibility.',
+      summary:
+        'Claims Manager is a secure, full-featured claims management solution that helps organizations register, track, and resolve claims with greater speed and clarity.',
+      capabilities: [
+        'Centralize claim intake, progress tracking, and resolution workflows',
+        'Enable role-based access for teams, administrators, and external users',
+        'Provide real-time updates and notifications to keep stakeholders informed',
+        'Support admin reporting, secure authentication, and business-critical data handling'
+      ],
+      pillars: [
+        {
+          icon: <CheckCircle className="w-6 h-6" />,
+          title: 'Workflow clarity',
+          description: 'Bring every claim into one structured system with better visibility and accountability.'
+        },
+        {
+          icon: <Users className="w-6 h-6" />,
+          title: 'Collaborative handling',
+          description: 'Keep internal teams and external users aligned with contextual communication.'
+        },
+        {
+          icon: <Globe className="w-6 h-6" />,
+          title: 'Operational oversight',
+          description: 'Use reporting and admin tooling to manage organizations, users, and ongoing claims.'
+        },
+        {
+          icon: <ShieldCheck className="w-6 h-6" />,
+          title: 'Secure by design',
+          description: 'Protect sensitive claim workflows with strong authentication and controlled access.'
+        }
+      ]
+    }
+  ];
+
   const handleMenuToggle = (): void => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -75,14 +154,20 @@ const App: React.FC = () => {
   };
 
   const handleCTAClick = (action: string): void => {
-    if (action === 'consultation' || action === 'quote') {
-      // Scroll to contact form
-      const contactSection = document.getElementById('contact');
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: 'smooth' });
+    const sectionMap: Record<string, string> = {
+      'get-started': 'contact',
+      consultation: 'contact',
+      quote: 'contact',
+      'view-work': 'featured'
+    };
+
+    const targetId = sectionMap[action];
+
+    if (targetId) {
+      const targetSection = document.getElementById(targetId);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    } else {
-      console.log(`CTA clicked: ${action}`);
     }
   };
 
@@ -131,14 +216,14 @@ const App: React.FC = () => {
         <MaxWidthContainer>
           <NavContainer>
             <Logo>
-              <LogoIcon />
+              <img src={logo} alt="ByteSlide Logo" />
               <span>ByteSlide</span>
             </Logo>
             
             <NavLinks>
-              <NavLink href="#services">Services buh</NavLink>
+              <NavLink href="#services">Services</NavLink>
+              <NavLink href="#featured">Featured Solutions</NavLink>
               <NavLink href="#about">About</NavLink>
-              <NavLink href="#testimonials">Testimonials</NavLink>
               <NavLink href="#contact">Contact</NavLink>
             </NavLinks>
 
@@ -152,8 +237,8 @@ const App: React.FC = () => {
             <MobileMenu>
               <FlexContainer direction="col" style={{ gap: '1rem' }}>
                 <NavLink href="#services" mobile onClick={handleNavClick}>Services</NavLink>
+                <NavLink href="#featured" mobile onClick={handleNavClick}>Featured Solutions</NavLink>
                 <NavLink href="#about" mobile onClick={handleNavClick}>About</NavLink>
-                <NavLink href="#testimonials" mobile onClick={handleNavClick}>Testimonials</NavLink>
                 <NavLink href="#contact" mobile onClick={handleNavClick}>Contact</NavLink>
               </FlexContainer>
             </MobileMenu>
@@ -188,9 +273,9 @@ const App: React.FC = () => {
           </div>
 
           {/* Floating elements */}
-          <FloatingCircle color="#bfdbfe" top="5rem" left="2.5rem" size="5rem" animation="bounce" />
-          <FloatingCircle color="#e9d5ff" top="10rem" right="5rem" size="4rem" animation="pulse" />
-          <FloatingCircle color="#c7d2fe" bottom="5rem" left="5rem" size="3rem" animation="bounce" />
+          <FloatingCircle color="#dbeafe" top="5rem" left="2.5rem" size="5rem" animation="bounce" />
+          <FloatingCircle color="#e2e8f0" top="10rem" right="5rem" size="4rem" animation="pulse" />
+          <FloatingCircle color="#bfdbfe" bottom="5rem" left="5rem" size="3rem" animation="bounce" />
         </MaxWidthContainer>
       </HeroSection>
 
@@ -223,6 +308,61 @@ const App: React.FC = () => {
               </ServiceCard>
             ))}
           </GridContainer>
+        </MaxWidthContainer>
+      </Section>
+
+      {/* Featured Product Section */}
+      <Section id="featured">
+        <MaxWidthContainer>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <Heading2>Featured Solutions</Heading2>
+            <Paragraph size="xl" style={{ maxWidth: '48rem', margin: '0 auto' }}>
+              A selection of business-focused platforms designed for operational clarity, secure collaboration, and scalable day-to-day workflows.
+            </Paragraph>
+          </div>
+
+          <FeaturedSolutionsStack>
+            {featuredSolutions.map((solution, solutionIndex: number) => (
+              <ProductShowcase key={solution.title}>
+                <div>
+                  <SectionEyebrow>{solution.eyebrow}</SectionEyebrow>
+                  <Heading2 style={{ marginBottom: '1rem' }}>{solution.title}</Heading2>
+                  <Paragraph size="lg" style={{ marginBottom: '1rem' }}>
+                    {solution.description}
+                  </Paragraph>
+                  <Paragraph style={{ marginBottom: '1rem' }}>
+                    {solution.details}
+                  </Paragraph>
+
+                  <MarketingQuote>
+                    {solution.summary}
+                  </MarketingQuote>
+
+                  <FeatureList>
+                    {solution.capabilities.map((capability: string, index: number) => (
+                      <FeatureListItem key={index}>
+                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+                        <span>{capability}</span>
+                      </FeatureListItem>
+                    ))}
+                  </FeatureList>
+                </div>
+
+                <ShowcasePanel>
+                  <PanelHeading>{solutionIndex === 0 ? 'Built for modern inventory operations' : 'Designed for modern claims workflows'}</PanelHeading>
+                  <PillarGrid>
+                    {solution.pillars.map((pillar, index: number) => (
+                      <PillarCard key={index}>
+                        <PillarIcon>{pillar.icon}</PillarIcon>
+                        <h3>{pillar.title}</h3>
+                        <p>{pillar.description}</p>
+                      </PillarCard>
+                    ))}
+                  </PillarGrid>
+                </ShowcasePanel>
+              </ProductShowcase>
+            ))}
+          </FeaturedSolutionsStack>
         </MaxWidthContainer>
       </Section>
 
@@ -375,17 +515,17 @@ const App: React.FC = () => {
           <Heading2 style={{ color: 'white', marginBottom: '1.5rem' }}>
             Ready to Transform Your Digital Presence?
           </Heading2>
-          <Paragraph size="xl" style={{ color: '#bfdbfe', marginBottom: '2.5rem', maxWidth: '42rem', margin: '0 auto' }}>
+          <Paragraph size="xl" style={{ maxWidth: '42rem', margin: '0 auto 2.5rem' }}>
             Let's discuss how ByteSlide can help you build the perfect web solution for your business needs.
           </Paragraph>
           
-          <FlexContainer justify="center" style={{ gap: '1rem', flexDirection: 'column' }}>
+          <FlexContainer justify="center" align="center" style={{ gap: '1rem', flexWrap: 'wrap' }}>
             <StyledButton variant="secondary" onClick={() => handleCTAClick('consultation')}>
               Schedule a Consultation
             </StyledButton>
             <StyledButton 
               variant="outline" 
-              style={{ borderColor: 'white', color: 'white' }}
+              style={{ borderColor: '#94a3b8', color: 'white', background: 'transparent' }}
               onClick={() => handleCTAClick('quote')}
             >
               Get a Quote
@@ -399,7 +539,8 @@ const App: React.FC = () => {
         <MaxWidthContainer>
           <FooterGrid>
             <div>
-              <Logo style={{ color: 'linear-gradient(to left, #2563eb, #9333ea)' }}>
+              <Logo style={{ color: 'white', marginBottom: '0.75rem' }}>
+                <img src={logo} alt="ByteSlide Logo" />
                 <span>ByteSlide</span>
               </Logo>
               <Paragraph style={{ color: '#9ca3af' }}>
@@ -456,7 +597,8 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    color: #374151;
+    color: #334155;
+    background-color: #ffffff;
   }
 `;
 
@@ -479,12 +621,16 @@ const Container = styled.div`
 `;
 
 const Section = styled.section<{ bgColor?: string }>`
-  padding: 5rem 0;
+  padding: 5.5rem 0;
   ${props => props.bgColor && `background-color: ${props.bgColor};`}
+
+  @media (max-width: 768px) {
+    padding: 4rem 0;
+  }
 `;
 
 const MaxWidthContainer = styled.div`
-  max-width: 80rem;
+  max-width: 72rem;
   margin-left: auto;
   margin-right: auto;
   padding-left: 1rem;
@@ -503,49 +649,53 @@ const MaxWidthContainer = styled.div`
 
 const Heading1 = styled.h1`
   font-size: 3rem;
-  font-weight: bold;
-  color: #111827;
-  margin-bottom: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #0f172a;
+  margin-bottom: 1.25rem;
+  line-height: 1.05;
 
   @media (min-width: 768px) {
-    font-size: 4.5rem;
+    font-size: 4.25rem;
   }
 `;
 
 const Heading2 = styled.h2`
   font-size: 2.25rem;
-  font-weight: bold;
-  color: #111827;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #0f172a;
   margin-bottom: 1rem;
 
   @media (min-width: 768px) {
-    font-size: 3rem;
+    font-size: 2.85rem;
   }
 `;
 
 const Heading3 = styled.h3`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #111827;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #0f172a;
   margin-bottom: 1rem;
+  letter-spacing: -0.02em;
 `;
 
 const Paragraph = styled.p<{ size?: 'base' | 'lg' | 'xl' }>`
-  line-height: 1.625;
+  line-height: 1.75;
+  color: #475569;
   ${props => {
     switch (props.size) {
-      case 'xl': return css`font-size: 1.25rem;`;
-      case 'lg': return css`font-size: 1.125rem;`;
+      case 'xl': return css`font-size: 1.2rem;`;
+      case 'lg': return css`font-size: 1.075rem;`;
       default: return css`font-size: 1rem;`;
     }
   }}
 `;
 
 const GradientText = styled.span`
-  background: linear-gradient(to right, #2563eb, #9333ea);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #1d4ed8;
+  letter-spacing: -0.03em;
 `;
 
 const FlexContainer = styled.div<{ direction?: 'row' | 'col', justify?: string, align?: string }>`
@@ -571,10 +721,12 @@ const StyledNav = styled.nav<{ scrolled: boolean }>`
   top: 0;
   width: 100%;
   z-index: 50;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
   ${props => props.scrolled && css`
-    background-color: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
   `}
 `;
 
@@ -590,28 +742,31 @@ const NavContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
+  padding: 0.9rem 0;
 `;
 
 const Logo = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.75rem;
+  color: #0f172a;
+
+  img {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+  }
   
   span {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #111827;
+    color: inherit;
+    line-height: 1;
   }
 `;
 
-const LogoIcon = styled.div`
-  width: 2rem;
-  height: 2rem;
-  background: linear-gradient(to right, #2563eb, #9333ea);
-  color: linear-gradient(to left, #2563eb, #9333ea);
-  border-radius: 0.5rem;
-  margin-right: 0.75rem;
-`;
 
 const NavLinks = styled.div`
   display: none;
@@ -648,10 +803,11 @@ const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' | 'outlin
   padding: 1rem 2rem;
   border-radius: 0.5rem;
   font-weight: 600;
-  transition: all 0.3s;
+  transition: all 0.25s ease;
   display: inline-flex;
   align-items: center;
-  border: none;
+  justify-content: center;
+  border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
 
@@ -664,37 +820,40 @@ const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' | 'outlin
     switch (props.variant) {
       case 'primary':
         return css`
-          background: linear-gradient(to right, #2563eb, #9333ea);
+          background-color: #1d4ed8;
           color: white;
           
           &:hover:not(:disabled) {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            transform: translateY(-0.25rem);
+            background-color: #1e40af;
+            box-shadow: 0 10px 20px rgba(29, 78, 216, 0.18);
+            transform: translateY(-1px);
           }
         `;
       case 'secondary':
         return css`
           background-color: white;
-          color: #2563eb;
+          color: #0f172a;
+          border-color: #cbd5e1;
           
           &:hover:not(:disabled) {
-            background-color: #f9fafb;
+            background-color: #f8fafc;
           }
         `;
       case 'outline':
         return css`
-          border: 2px solid #d1d5db;
-          background: transparent;
-          color: #374151;
+          border-color: #94a3b8;
+          background: white;
+          color: #0f172a;
           
           &:hover:not(:disabled) {
-            border-color: #2563eb;
-            color: #2563eb;
+            background-color: #eff6ff;
+            border-color: #1d4ed8;
+            color: #1d4ed8;
           }
         `;
       default:
         return css`
-          background: linear-gradient(to right, #2563eb, #9333ea);
+          background-color: #1d4ed8;
           color: white;
         `;
     }
@@ -702,13 +861,14 @@ const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' | 'outlin
 `;
 
 const NavLink = styled.a<{ mobile?: boolean }>`
-  color: #374151;
-  transition: color 0.3s;
+  color: #334155;
+  transition: color 0.25s ease;
   text-decoration: none;
   cursor: pointer;
+  font-weight: 500;
   
   &:hover {
-    color: #2563eb;
+    color: #1d4ed8;
   }
   
   ${props => props.mobile && css`
@@ -720,15 +880,15 @@ const NavLink = styled.a<{ mobile?: boolean }>`
 // Hero Section
 const HeroSection = styled(Section)`
   position: relative;
-  padding-top: 5rem;
-  padding-bottom: 4rem;
+  padding-top: 6rem;
+  padding-bottom: 5rem;
   overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom right, #dbeafe, white, #fae8ff);
+    background: #f8fbff;
   }
 `;
 
@@ -742,24 +902,27 @@ const FloatingCircle = styled.div<{ color: string, top?: string, right?: string,
   height: ${props => props.size};
   border-radius: 50%;
   background-color: ${props => props.color};
-  opacity: 0.3;
-  ${props => props.animation === 'bounce' && css`animation: ${bounce} 2s infinite;`}
-  ${props => props.animation === 'pulse' && css`animation: ${pulse} 2s infinite;`}
+  opacity: 0.18;
+  filter: blur(1px);
+  ${props => props.animation === 'bounce' && css`animation: ${bounce} 4s infinite;`}
+  ${props => props.animation === 'pulse' && css`animation: ${pulse} 4s infinite;`}
 `;
 
 // Service Card
 const ServiceCard = styled.div`
   background-color: white;
   padding: 2rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   
   &:hover {
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
     
     > div:first-child {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
   }
 `;
@@ -772,21 +935,138 @@ const ServiceIcon = styled.div`
 
 // Stats Section
 const StatsContainer = styled.div`
-  background: linear-gradient(to right, #2563eb, #9333ea);
+  background: #1e3a8a;
   border-radius: 1rem;
   padding: 2rem;
   color: white;
+  box-shadow: 0 20px 40px rgba(30, 58, 138, 0.18);
+`;
+
+const FeaturedSolutionsStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const ProductShowcase = styled.div`
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  align-items: stretch;
+  padding: 2rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1.25rem;
+  background: white;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+`;
+
+const SectionEyebrow = styled.div`
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+`;
+
+const FeatureList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+`;
+
+const FeatureListItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  text-align: left;
+`;
+
+const ShowcasePanel = styled.div`
+  background: #0f172a;
+  color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+`;
+
+const MarketingQuote = styled.div`
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.1rem;
+  border-left: 4px solid #1d4ed8;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  color: #1e293b;
+  font-weight: 600;
+`;
+
+const PanelHeading = styled.h3`
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+`;
+
+const PillarGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const PillarCard = styled.div`
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.85rem;
+  padding: 1rem;
+  text-align: left;
+
+  h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #d1d5db;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+`;
+
+const PillarIcon = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background: #1d4ed8;
+  margin-bottom: 0.75rem;
 `;
 
 // CTA Section
 const CTASection = styled(Section)`
-  background: linear-gradient(to right, #2563eb, #9333ea);
+  background: #0f172a;
   text-align: center;
+
+  ${Paragraph} {
+    color: #cbd5e1;
+  }
 `;
 
 // Footer
 const Footer = styled.footer`
-  background-color: #111827;
+  background-color: #0b1220;
   color: white;
   padding: 3rem 0;
 `;
@@ -828,8 +1108,9 @@ const FooterBottom = styled.div`
 const ContactFormContainer = styled.div`
   background-color: white;
   padding: 2rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
 `;
 
 const FormGrid = styled.div`
