@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://byteslide.se/sitemap.xml
+Host: https://byteslide.se

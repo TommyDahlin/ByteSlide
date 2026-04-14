@@ -260,10 +260,10 @@ const App: React.FC = () => {
               <GradientText>ByteSlide</GradientText>
             </Heading1>
             <Heading2 style={{ fontSize: '1.875rem', fontWeight: 400, marginBottom: '1.5rem' }}>
-              Business platforms built for real operational workflows
+              Custom business web applications for real operational workflows
             </Heading2>
             <Paragraph size="xl" style={{ marginBottom: '3rem', maxWidth: '48rem', marginLeft: 'auto', marginRight: 'auto' }}>
-              From Inventor-Y to Claims Manager, ByteSlide designs polished web applications that help teams manage inventory, claims, collaboration, and business-critical operations with clarity and speed.
+              From Inventor-Y to Claims Manager, ByteSlide designs polished custom web applications that help teams manage inventory, claims, collaboration, and business-critical operations with clarity and speed.
             </Paragraph>
             
             <FlexContainer justify="center" align="center" style={{ gap: '1rem', flexWrap: 'wrap' }}>
@@ -288,7 +288,7 @@ const App: React.FC = () => {
       <Section id="services" bgColor="#f9fafb">
         <MaxWidthContainer>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <Heading2>What We Build</Heading2>
+            <Heading2>Custom Web Applications We Build</Heading2>
             <Paragraph size="xl" style={{ maxWidth: '42rem', margin: '0 auto' }}>
               Modern web platforms designed around real business workflows, from inventory control to structured claims management and day-to-day operations.
             </Paragraph>
