@@ -76,6 +76,7 @@ const App: React.FC = () => {
         'The platform supports inventory creation, multi-location quantity tracking, fast stock transfers, responsive scanning workflows, subscription-aware collaboration, and role-based controls in a polished business-focused experience.',
       summary:
         'A professional inventory system focused on visibility, speed, and maintainable operations at scale.',
+      liveUrl: 'https://inventor-y.vercel.app/',
       capabilities: [
         'Create and manage inventory items with dependable state handling',
         'Assign and move stock across rooms, shelves, rows, drawers, and slots',
@@ -114,6 +115,7 @@ const App: React.FC = () => {
         'Built for organizations that need better oversight and smoother workflows, Claims Manager helps teams create, assign, track, and resolve claims in one secure system with documentation, in-context communication, and full lifecycle visibility.',
       summary:
         'Claims Manager is a secure, full-featured claims management solution that helps organizations register, track, and resolve claims with greater speed and clarity.',
+      liveUrl: 'https://claims-handler.vercel.app/',
       capabilities: [
         'Centralize claim intake, progress tracking, and resolution workflows',
         'Enable role-based access for teams, administrators, and external users',
@@ -250,18 +252,21 @@ const App: React.FC = () => {
       <HeroSection>
         <MaxWidthContainer style={{ position: 'relative', paddingTop: '4rem' }}>
           <div style={{ textAlign: 'center' }}>
+            <HeroBadgeRow>
+              <HeroBadge>Inventor-Y • Inventory workflows</HeroBadge>
+              <HeroBadge>Claims Manager • Claims handling</HeroBadge>
+            </HeroBadgeRow>
             <Heading1>
               <GradientText>ByteSlide</GradientText>
             </Heading1>
-            <Heading2 style={{ fontSize: '1.875rem', fontWeight: 300, marginBottom: '2rem' }}>
-              Your Solution to Complex Web Challenges
+            <Heading2 style={{ fontSize: '1.875rem', fontWeight: 400, marginBottom: '1.5rem' }}>
+              Business platforms built for real operational workflows
             </Heading2>
             <Paragraph size="xl" style={{ marginBottom: '3rem', maxWidth: '48rem', marginLeft: 'auto', marginRight: 'auto' }}>
-              We specialize in crafting cutting-edge web applications and single-page applications that drive business growth. 
-              Transform your digital presence with scalable, high-performance solutions built by expert consultants.
+              From Inventor-Y to Claims Manager, ByteSlide designs polished web applications that help teams manage inventory, claims, collaboration, and business-critical operations with clarity and speed.
             </Paragraph>
             
-            <FlexContainer justify="center" align="center" style={{ gap: '1rem', flexDirection: 'column' }}>
+            <FlexContainer justify="center" align="center" style={{ gap: '1rem', flexWrap: 'wrap' }}>
               <StyledButton variant="primary" onClick={() => handleCTAClick('get-started')}>
                 Get Started Today
                 <ArrowRight className="inline-block ml-2 w-5 h-5" />
@@ -283,9 +288,9 @@ const App: React.FC = () => {
       <Section id="services" bgColor="#f9fafb">
         <MaxWidthContainer>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <Heading2>Our Expertise</Heading2>
+            <Heading2>What We Build</Heading2>
             <Paragraph size="xl" style={{ maxWidth: '42rem', margin: '0 auto' }}>
-              Delivering comprehensive web solutions that exceed expectations and drive measurable results
+              Modern web platforms designed around real business workflows, from inventory control to structured claims management and day-to-day operations.
             </Paragraph>
           </div>
 
@@ -338,6 +343,15 @@ const App: React.FC = () => {
                     {solution.summary}
                   </MarketingQuote>
 
+                  <StyledButton
+                    variant="primary"
+                    onClick={() => window.open(solution.liveUrl, '_blank', 'noopener,noreferrer')}
+                    style={{ marginBottom: '1.25rem' }}
+                  >
+                    Visit Live Project
+                    <ArrowRight className="inline-block ml-2 w-5 h-5" />
+                  </StyledButton>
+
                   <FeatureList>
                     {solution.capabilities.map((capability: string, index: number) => (
                       <FeatureListItem key={index}>
@@ -371,10 +385,9 @@ const App: React.FC = () => {
         <MaxWidthContainer>
           <GridContainer cols={2} gap={4}>
             <div>
-              <Heading2>Why Choose ByteSlide?</Heading2>
+              <Heading2>Why Teams Choose ByteSlide</Heading2>
               <Paragraph size="lg" style={{ marginBottom: '2rem' }}>
-                We're not just developers – we're strategic partners who understand that every line of code should serve your business objectives. 
-                With years of experience in modern web technologies, we deliver solutions that are both innovative and reliable.
+                We combine product thinking, clean engineering, and business context to build tools people actually use. Platforms like Inventor-Y and Claims Manager reflect that focus on clarity, reliability, and maintainable growth.
               </Paragraph>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -513,10 +526,10 @@ const App: React.FC = () => {
       <CTASection>
         <MaxWidthContainer>
           <Heading2 style={{ color: 'white', marginBottom: '1.5rem' }}>
-            Ready to Transform Your Digital Presence?
+            Ready to Build Your Next Business Platform?
           </Heading2>
           <Paragraph size="xl" style={{ maxWidth: '42rem', margin: '0 auto 2.5rem' }}>
-            Let's discuss how ByteSlide can help you build the perfect web solution for your business needs.
+            If you need a product for inventory, claims, or another high-value workflow, ByteSlide can help design and deliver it.
           </Paragraph>
           
           <FlexContainer justify="center" align="center" style={{ gap: '1rem', flexWrap: 'wrap' }}>
@@ -544,7 +557,7 @@ const App: React.FC = () => {
                 <span>ByteSlide</span>
               </Logo>
               <Paragraph style={{ color: '#9ca3af' }}>
-                Professional web consulting services for modern businesses.
+                Modern digital products for inventory, claims, and business-critical workflows.
               </Paragraph>
             </div>
             <FooterColumn>
@@ -696,6 +709,26 @@ const Paragraph = styled.p<{ size?: 'base' | 'lg' | 'xl' }>`
 const GradientText = styled.span`
   color: #1d4ed8;
   letter-spacing: -0.03em;
+`;
+
+const HeroBadgeRow = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+`;
+
+const HeroBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #dbeafe;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1d4ed8;
+  font-size: 0.875rem;
+  font-weight: 700;
 `;
 
 const FlexContainer = styled.div<{ direction?: 'row' | 'col', justify?: string, align?: string }>`
