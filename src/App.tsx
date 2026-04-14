@@ -37,6 +37,57 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const gaId = import.meta.env.VITE_GA_MEASUREMENT_ID;
+
+    if (gaId && !document.getElementById('ga-script')) {
+      const gtagScript = document.createElement('script');
+      gtagScript.async = true;
+      gtagScript.id = 'ga-script';
+      gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+      document.head.appendChild(gtagScript);
+
+      const inlineScript = document.createElement('script');
+      inlineScript.id = 'ga-inline-script';
+      inlineScript.innerHTML = `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', '${gaId}');
+      `;
+      document.head.appendChild(inlineScript);
+    }
+
+    const fbPixelId = import.meta.env.VITE_FB_PIXEL_ID;
+
+    if (fbPixelId && !document.getElementById('facebook-pixel-script')) {
+      const pixelScript = document.createElement('script');
+      pixelScript.id = 'facebook-pixel-script';
+      pixelScript.innerHTML = `
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '${fbPixelId}');
+        fbq('track', 'PageView');
+      `;
+      document.head.appendChild(pixelScript);
+    }
+  }, []);
+
+  const socialLinks: { label: string; href: string; icon: React.ReactNode }[] = [
+    { label: 'X', href: import.meta.env.VITE_X_PROFILE_URL || '', icon: <ArrowRight className="w-4 h-4" /> },
+    { label: 'Facebook', href: import.meta.env.VITE_FACEBOOK_PAGE_URL || '', icon: <ArrowRight className="w-4 h-4" /> },
+    { label: 'Instagram', href: import.meta.env.VITE_INSTAGRAM_PROFILE_URL || '', icon: <ArrowRight className="w-4 h-4" /> },
+    { label: 'LinkedIn', href: import.meta.env.VITE_LINKEDIN_PROFILE_URL || '', icon: <ArrowRight className="w-4 h-4" /> },
+    { label: 'YouTube', href: import.meta.env.VITE_YOUTUBE_CHANNEL_URL || '', icon: <ArrowRight className="w-4 h-4" /> }
+  ].filter(link => Boolean(link.href));
+
   const services: Service[] = [
     {
       icon: <Globe className="w-8 h-8" />,
@@ -202,7 +253,7 @@ const App: React.FC = () => {
       } else {
         throw new Error('Failed to send message');
       }
-    } catch (error) {
+    } catch {
       setSubmitMessage('Sorry, there was an error sending your message. Please try again or contact us directly.');
     } finally {
       setIsSubmitting(false);
@@ -295,16 +346,16 @@ const App: React.FC = () => {
           </div>
 
           <GridContainer cols={2} gap={3}>
-            {services.map((service: Service, index: number) => (
-              <ServiceCard key={index}>
+            {services.map((service: Service) => (
+              <ServiceCard key={service.title}>
                 <ServiceIcon>
                   {service.icon}
                 </ServiceIcon>
                 <Heading3>{service.title}</Heading3>
                 <Paragraph style={{ marginBottom: '1.5rem' }}>{service.description}</Paragraph>
                 <ul style={{ listStyle: 'none' }}>
-                  {service.features.map((feature: string, idx: number) => (
-                    <li key={idx} style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                  {service.features.map((feature: string) => (
+                    <li key={feature} style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                       <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                       {feature}
                     </li>
@@ -344,8 +395,11 @@ const App: React.FC = () => {
                   </MarketingQuote>
 
                   <StyledButton
+                    as="a"
+                    href={solution.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     variant="primary"
-                    onClick={() => window.open(solution.liveUrl, '_blank', 'noopener,noreferrer')}
                     style={{ marginBottom: '1.25rem' }}
                   >
                     Visit Live Project
@@ -353,8 +407,8 @@ const App: React.FC = () => {
                   </StyledButton>
 
                   <FeatureList>
-                    {solution.capabilities.map((capability: string, index: number) => (
-                      <FeatureListItem key={index}>
+                    {solution.capabilities.map((capability: string) => (
+                      <FeatureListItem key={capability}>
                         <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
                         <span>{capability}</span>
                       </FeatureListItem>
@@ -365,8 +419,8 @@ const App: React.FC = () => {
                 <ShowcasePanel>
                   <PanelHeading>{solutionIndex === 0 ? 'Built for modern inventory operations' : 'Designed for modern claims workflows'}</PanelHeading>
                   <PillarGrid>
-                    {solution.pillars.map((pillar, index: number) => (
-                      <PillarCard key={index}>
+                    {solution.pillars.map((pillar) => (
+                      <PillarCard key={pillar.title}>
                         <PillarIcon>{pillar.icon}</PillarIcon>
                         <h3>{pillar.title}</h3>
                         <p>{pillar.description}</p>
@@ -391,8 +445,8 @@ const App: React.FC = () => {
               </Paragraph>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {aboutFeatures.map((item: string, index: number) => (
-                  <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                {aboutFeatures.map((item: string) => (
+                  <div key={item} style={{ display: 'flex', alignItems: 'center' }}>
                     <CheckCircle className="w-6 h-6 text-green-500 mr-3" />
                     <span>{item}</span>
                   </div>
@@ -403,8 +457,8 @@ const App: React.FC = () => {
             <div style={{ position: 'relative' }}>
               <StatsContainer>
                 <GridContainer cols={2} gap={2}>
-                  {stats.map((stat, index: number) => (
-                    <div key={index} style={{ textAlign: 'center' }}>
+                  {stats.map((stat) => (
+                    <div key={stat.label} style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{stat.value}</div>
                       <div style={{ color: '#bfdbfe' }}>{stat.label}</div>
                     </div>
@@ -437,11 +491,11 @@ const App: React.FC = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Mail className="w-5 h-5 text-blue-600 mr-3" />
-                  <span>TommyDahlin95@outlook.com</span>
+                  <a href="mailto:TommyDahlin95@outlook.com" style={{ color: '#1d4ed8', textDecoration: 'none' }}>TommyDahlin95@outlook.com</a>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Phone className="w-5 h-5 text-blue-600 mr-3" />
-                  <span>+46709544189</span>
+                  <a href="tel:+46709544189" style={{ color: '#1d4ed8', textDecoration: 'none' }}>+46709544189</a>
                 </div>
               </div>
             </div>
@@ -583,9 +637,19 @@ const App: React.FC = () => {
             <FooterColumn>
               <h4>Connect</h4>
               <ul>
-                <li>TommyDahlin95@outlook.com</li>
-                <li>+46709544189</li>
+                <li><a href="mailto:TommyDahlin95@outlook.com">TommyDahlin95@outlook.com</a></li>
+                <li><a href="tel:+46709544189">+46709544189</a></li>
               </ul>
+              {socialLinks.length > 0 && (
+                <SocialLinksRow>
+                  {socialLinks.map((link) => (
+                    <SocialLink key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`Visit ByteSlide on ${link.label}`}>
+                      {link.icon}
+                      <span>{link.label}</span>
+                    </SocialLink>
+                  ))}
+                </SocialLinksRow>
+              )}
             </FooterColumn>
           </FooterGrid>
           
@@ -635,6 +699,8 @@ const Container = styled.div`
 
 const Section = styled.section<{ bgColor?: string }>`
   padding: 5.5rem 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
   ${props => props.bgColor && `background-color: ${props.bgColor};`}
 
   @media (max-width: 768px) {
@@ -1102,6 +1168,8 @@ const Footer = styled.footer`
   background-color: #0b1220;
   color: white;
   padding: 3rem 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 320px;
 `;
 
 const FooterGrid = styled.div`
@@ -1126,6 +1194,38 @@ const FooterColumn = styled.div`
       color: #9ca3af;
       margin-bottom: 0.5rem;
     }
+
+    a {
+      color: #9ca3af;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: white;
+    }
+  }
+`;
+
+const SocialLinksRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+`;
+
+const SocialLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  text-decoration: none;
+  font-size: 0.875rem;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
   }
 `;
 
