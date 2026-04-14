@@ -1,0 +1,14 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" rx="24" fill="url(#bg)"/>
+  <circle cx="1030" cy="120" r="120" fill="#60A5FA" fill-opacity="0.18"/>
+  <circle cx="160" cy="520" r="160" fill="#BFDBFE" fill-opacity="0.14"/>
+  <text x="90" y="230" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">ByteSlide</text>
+  <text x="90" y="310" fill="#DBEAFE" font-family="Arial, Helvetica, sans-serif" font-size="34">Custom business web applications</text>
+  <text x="90" y="365" fill="#DBEAFE" font-family="Arial, Helvetica, sans-serif" font-size="34">for inventory, claims, and operations</text>
+</svg>

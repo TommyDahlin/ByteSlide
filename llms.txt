@@ -1,0 +1,12 @@
+# ByteSlide
+
+ByteSlide builds custom business web applications focused on inventory management, claims handling, and operational workflows.
+
+Website: https://byteslide.se/
+Contact: TommyDahlin95@outlook.com
+
+## Services
+- Custom web application development
+- Business workflow platforms
+- Inventory management systems
+- Claims management solutions
